@@ -20,7 +20,7 @@ const program = new Command();
 program
     .name('gitcom')
     .description('AI-powered Git commit message generator')
-    .version(packageJson.version)
+    .version(packageJson.version, '-v, --version')
     .option('-r, --reset', 'Reset all configuration and keys');
 
 program

@@ -1,19 +1,18 @@
 import simpleGit from 'simple-git';
 const git = simpleGit();
 
+const EXCLUDE_PATHS = [
+    ':!package-lock.json',
+    ':!yarn.lock',
+    ':!pnpm-lock.yaml',
+    ':!node_modules',
+    ':!dist',
+    ':!build'
+];
+
 export async function getStagedDiff() {
     try {
-        // Exclude common lock files and large binary/generated files
-        const exclude = [
-            ':!package-lock.json',
-            ':!yarn.lock',
-            ':!pnpm-lock.yaml',
-            ':!node_modules',
-            ':!dist',
-            ':!build'
-        ];
-        
-        const diff = await git.diff(['--cached', ...exclude]);
+        const diff = await git.diff(['--cached', '--', '.', ...EXCLUDE_PATHS]);
         return diff;
     } catch (error) {
         throw new Error('Failed to get staged diff: ' + error.message);
@@ -21,11 +20,11 @@ export async function getStagedDiff() {
 }
 
 export async function getDiffStat() {
-    return await git.diff(['--cached', '--stat']);
+    return await git.diff(['--cached', '--stat', '--', '.', ...EXCLUDE_PATHS]);
 }
 
 export async function getChangedFiles() {
-    const names = await git.diff(['--cached', '--name-only']);
+    const names = await git.diff(['--cached', '--name-only', '--', '.', ...EXCLUDE_PATHS]);
     return names.trim().split('\n').filter(Boolean);
 }
 
