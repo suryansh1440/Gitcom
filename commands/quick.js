@@ -10,26 +10,47 @@ async function quick() {
         logger.info('Staging all changes...');
         execSync('git add .');
 
-        // 2. Commit (reusing the commit command logic)
-        // We call commit with options { yes: false } to allow review, 
-        // or we could ask the user if they want to auto-commit.
-        // For "quick", let's assume they might want to review the message first, 
-        // but we'll use the existing commit logic which handles staged changes.
-        await commit();
-
-        // Check if commit was successful by checking if there are still staged changes 
-        // (or if the last command succeeded). Since commit() handles its own errors, 
-        // we should check if we actually committed.
+        // 2. Commit
+        const commitResult = await commit({ quiet: true });
         
+        // If commit failed (error or cancellation), stop here
+        if (commitResult === false) {
+            return;
+        }
+
+        // If no changes were staged, check if we have any un-pushed commits
+        if (commitResult === 'no_changes') {
+            try {
+                // Check if current branch is ahead of its upstream
+                const status = execSync('git status -sb').toString();
+                const isAhead = status.includes('[ahead');
+                
+                if (!isAhead) {
+                    logger.info('No changes to commit and branch is up-to-date with remote. Nothing to push.');
+                    return;
+                }
+                logger.info('No new changes staged, but un-pushed commits found. Proceeding to push...');
+            } catch (error) {
+                // If no upstream is set, we might not know if we are ahead. 
+                // In this case, we'll proceed to branch selection anyway.
+            }
+        }
+
         // 3. Get Branches
         const spinner = ora('Fetching branches...').start();
-        const branchesRaw = execSync('git branch --all').toString();
+        let branches = [];
+        try {
+            const branchesRaw = execSync('git branch --all').toString();
+            branches = branchesRaw
+                .split('\n')
+                .map(b => b.trim().replace('* ', ''))
+                .filter(b => b && !b.includes('->'));
+        } catch (error) {
+            spinner.stop();
+            logger.error('Failed to fetch branches. Are you in a git repository?');
+            return;
+        }
         spinner.stop();
-
-        const branches = branchesRaw
-            .split('\n')
-            .map(b => b.trim().replace('* ', ''))
-            .filter(b => b && !b.includes('->'));
 
         if (branches.length === 0) {
             logger.warn('No branches found.');
@@ -53,8 +74,6 @@ async function quick() {
         if (shouldPush) {
             const pushSpinner = ora(`Pushing to ${targetBranch}...`).start();
             try {
-                // If it's a remote branch, we might need to handle it differently, 
-                // but usually 'git push origin branchname' works.
                 const cleanBranch = targetBranch.replace('remotes/origin/', '');
                 execSync(`git push origin ${cleanBranch}`, { stdio: 'inherit' });
                 pushSpinner.stop();

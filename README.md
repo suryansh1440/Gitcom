@@ -54,7 +54,6 @@ Install globally using npm:
 ```bash
 npm install -g gitcom-cli
 ```
-*Note: You can also run it without installing via `npx gitcom-cli`.*
 
 ### API Configuration
 Run the setup wizard to configure your preferred provider:

@@ -10,8 +10,10 @@ async function commit(options = {}) {
         const context = await getOptimizedContext();
 
         if (context.files.length === 0) {
-            logger.warn('No staged changes found. Use "git add" to stage changes first.');
-            return;
+            if (!options.quiet) {
+                logger.warn('No staged changes found. Use "git add" to stage changes first.');
+            }
+            return 'no_changes';
         }
 
         const spinner = ora('Analyzing changes and generating message...').start();
@@ -25,7 +27,7 @@ async function commit(options = {}) {
                 const escapedMessage = message.replace(/"/g, '\\"');
                 execSync(`git commit -m "${escapedMessage}"`, { stdio: 'inherit' });
                 logger.success('Changes committed instantly! 🚀');
-                return;
+                return true;
             }
 
             logger.info('Suggested Commit Message:');
@@ -47,15 +49,17 @@ async function commit(options = {}) {
 
                 if (!finalMessage.trim()) {
                     logger.warn('Commit cancelled: Empty commit message.');
-                    return;
+                    return false;
                 }
 
                 // Escape double quotes for shell command
                 const escapedMessage = finalMessage.replace(/"/g, '\\"');
                 execSync(`git commit -m "${escapedMessage}"`, { stdio: 'inherit' });
                 logger.success('Changes committed successfully!');
+                return true;
             } else {
                 logger.info('Commit cancelled.');
+                return false;
             }
         } catch (error) {
             spinner.stop();
@@ -64,9 +68,11 @@ async function commit(options = {}) {
             } else {
                 logger.error(`Failed to generate message: ${error.message}`);
             }
+            return false;
         }
     } catch (error) {
         logger.error(`Error: ${error.message}`);
+        return false;
     }
 }
 
