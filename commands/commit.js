@@ -5,7 +5,7 @@ import { getOptimizedContext } from '../git/diff.js';
 import AIProviderFactory from '../providers/factory.js';
 import logger from '../utils/logger.js';
 
-async function commit() {
+async function commit(options = {}) {
     try {
         const context = await getOptimizedContext();
 
@@ -20,6 +20,13 @@ async function commit() {
             const provider = AIProviderFactory.getProvider();
             const message = await provider.generateCommitMessage(context);
             spinner.stop();
+
+            if (options.yes) {
+                const escapedMessage = message.replace(/"/g, '\\"');
+                execSync(`git commit -m "${escapedMessage}"`, { stdio: 'inherit' });
+                logger.success('Changes committed instantly! 🚀');
+                return;
+            }
 
             logger.info('Suggested Commit Message:');
             logger.dim('--------------------------');

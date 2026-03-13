@@ -15,8 +15,8 @@
 
 ### 🥳 Updates
 - **2026/03/13**: **v1.0.0 Released!** Full support for OpenAI, Gemini, and Ollama.
-- **2026/03/13**: **Compact Messages**: Optimized for single-line, descriptive commit history (<70 chars).
-- **2026/03/13**: **Integrated Flow**: Completely refactored `init` and `settings` for seamless setup.
+- **2026/03/13**: **Global Distribution**: Ready to install via `npm install -g gitcom`.
+- **2026/03/13**: **Auto-Commit Mode**: Added `-y, --yes` flag for instant AI commits.
 - **2026/03/13**: **Token Optimization**: Hybrid diff analysis reduces LLM costs by up to 90%.
 
 ---
@@ -37,6 +37,7 @@ Welcome to **GitCom**, a high-performance CLI tool designed to automate the most
 ## 🎯 Features
 - ⚡ **Hybrid Strategy**: Uses `git diff --stat` for large changes to minimize token usage.
 - 📐 **Compact Output**: All messages are single-line and optimized for git history readability.
+- 🚀 **Auto-Commit**: Use `-y` or `--yes` to skip confirmation and commit instantly.
 - 🛠️ **Integrated Setup**: One-stop wizard for Provider, API Key, and Model selection.
 - 🧹 **Noise Filtering**: Automatically ignores lockfiles, build artifacts, and binaries.
 
@@ -49,12 +50,11 @@ Welcome to **GitCom**, a high-performance CLI tool designed to automate the most
 - **Git**: Installed and initialized in your repo.
 
 ### Installation
-Clone the repository and link it globally:
+Install globally using npm:
 ```bash
-git clone https://github.com/suryansh1440/Gitcom.git
-cd Gitcom
-npm link
+npm install -g gitcom
 ```
+*Note: You can also run it without installing via `npx gitcom`.*
 
 ### API Configuration
 Run the setup wizard to configure your preferred provider:
@@ -74,7 +74,14 @@ Stage your changes first, then run `gitcom`:
 git add .
 gitcom commit
 ```
-*Or simply:*
+
+### Auto-Commit (Fast Mode)
+Skip the confirmation and commit instantly:
+```bash
+gitcom commit -y
+```
+
+*Or simply run the default command:*
 ```bash
 gitcom
 ```

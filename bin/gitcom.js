@@ -32,7 +32,8 @@ program
 program
     .command('commit')
     .description('Generate and use an AI commit message')
-    .action(commit);
+    .option('-y, --yes', 'Skip confirmation and commit instantly')
+    .action((options) => commit(options));
 
 program
     .command('config')
