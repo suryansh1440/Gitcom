@@ -1,5 +1,5 @@
 import ora from 'ora';
-import inquirer from 'inquirer';
+import { confirm, input } from '@inquirer/prompts';
 import { execSync } from 'child_process';
 import { getOptimizedContext } from '../git/diff.js';
 import AIProviderFactory from '../providers/factory.js';
@@ -26,24 +26,21 @@ async function commit() {
             console.log(message);
             logger.dim('--------------------------');
 
-            const { confirm } = await inquirer.prompt([
-                {
-                    type: 'confirm',
-                    name: 'confirm',
-                    message: 'Use this commit message?',
-                    default: true
-                }
-            ]);
+            const isConfirmed = await confirm({
+                message: 'Use this commit message?',
+                default: true
+            });
 
-            if (confirm) {
-                const { finalMessage } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'finalMessage',
-                        message: 'Edit message (optional):',
-                        default: message
-                    }
-                ]);
+            if (isConfirmed) {
+                const finalMessage = await input({
+                    message: 'Edit message (optional):',
+                    default: message
+                });
+
+                if (!finalMessage.trim()) {
+                    logger.warn('Commit cancelled: Empty commit message.');
+                    return;
+                }
 
                 // Escape double quotes for shell command
                 const escapedMessage = finalMessage.replace(/"/g, '\\"');
@@ -54,7 +51,11 @@ async function commit() {
             }
         } catch (error) {
             spinner.stop();
-            logger.error(`Failed to generate message: ${error.message}`);
+            if (error.name === 'ExitPromptError') {
+                logger.info('Cancelled by user.');
+            } else {
+                logger.error(`Failed to generate message: ${error.message}`);
+            }
         }
     } catch (error) {
         logger.error(`Error: ${error.message}`);

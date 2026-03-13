@@ -19,9 +19,15 @@ class OllamaProvider {
             const response = await axios.post(`${this.baseUrl}/api/generate`, {
                 model: model,
                 prompt: `You are a professional Git commit generator. 
-                Generate a concise commit message based on the following changes.
-                Return ONLY the message, no quotes or prefix. Follow conventional commits.
+                Analyze the following changes and generate a concise, descriptive commit message.
 
+                Rules:
+                1. Use specific verbs (e.g., "implement", "add", "refactor", "fix", "update", "remove", "configure").
+                2. Avoid generic descriptions like "enhance functionality" or "update code" or "make changes".
+                3. Be specific about WHAT changed (e.g., "add Gemini provider" instead of "enhance providers").
+                4. Return ONLY the message string. No quotes, no prefix.
+
+                Context:
                 ${promptContent}`,
                 stream: false
             });

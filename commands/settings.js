@@ -1,55 +1,55 @@
-import inquirer from 'inquirer';
+import { select, input } from '@inquirer/prompts';
 import config from '../config/config.js';
 import logger from '../utils/logger.js';
 
 async function settings() {
     logger.info('Current Settings:');
-    console.table(config.store);
-
-    const { action } = await inquirer.prompt([
-        {
-            type: 'list',
-            name: 'action',
-            message: 'What would you like to do?',
-            choices: ['Change Provider', 'Update API Key', 'Change Model', 'Exit']
+    const allConfig = config.store;
+    Object.entries(allConfig).forEach(([key, value]) => {
+        if (key.includes('key')) {
+            logger.dim(`${key}: ********`);
+        } else {
+            logger.dim(`${key}: ${value}`);
         }
-    ]);
+    });
 
-    if (action === 'Change Provider') {
-        const { provider } = await inquirer.prompt([
-            {
-                type: 'list',
-                name: 'provider',
+    try {
+        const action = await select({
+            message: 'What would you like to do?',
+            choices: [
+                { name: 'Change AI Provider', value: 'provider' },
+                { name: 'Update Model Name', value: 'model' },
+                { name: 'Exit', value: 'exit' }
+            ]
+        });
+
+        if (action === 'exit') return;
+
+        if (action === 'provider') {
+            const provider = await select({
                 message: 'Select AI provider:',
-                choices: ['openai', 'gemini', 'ollama']
-            }
-        ]);
-        config.set('provider', provider);
-        logger.success(`Provider changed to ${provider}`);
-    } else if (action === 'Update API Key') {
-        const provider = config.get('provider');
-        const keyName = provider === 'openai' ? 'openai_key' : 'gemini_key';
-        
-        const { key } = await inquirer.prompt([
-            {
-                type: 'password',
-                name: 'key',
-                message: `Enter new API key for ${provider}:`
-            }
-        ]);
-        config.set(keyName, key);
-        logger.success('API key updated');
-    } else if (action === 'Change Model') {
-        const { model } = await inquirer.prompt([
-            {
-                type: 'input',
-                name: 'model',
-                message: 'Enter model name:',
-                default: config.get('model')
-            }
-        ]);
-        config.set('model', model);
-        logger.success(`Model updated to ${model}`);
+                choices: [
+                    { name: 'Gemini (Recommended)', value: 'gemini' },
+                    { name: 'OpenAI', value: 'openai' },
+                    { name: 'Ollama (Local LLM)', value: 'ollama' }
+                ]
+            });
+            config.set('provider', provider);
+            logger.success(`Provider switched to ${provider}. Run "gitcom init" to update keys if needed.`);
+        } else if (action === 'model') {
+            const model = await input({
+                message: 'Enter new model name:',
+                default: config.get('model') || 'gemini-1.5-flash'
+            });
+            config.set('model', model);
+            logger.success(`Model updated to ${model}`);
+        }
+    } catch (error) {
+        if (error.name === 'ExitPromptError') {
+            // User cancelled
+        } else {
+            logger.error(`Error: ${error.message}`);
+        }
     }
 }
 

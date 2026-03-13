@@ -24,7 +24,14 @@ class OpenAIProvider {
             messages: [
                 {
                     role: 'system',
-                    content: 'You are a professional Git commit generator. Generate a concise commit message based on the provided file list and diff. Return ONLY the message, no quotes or prefix. Follow conventional commits if possible.'
+                    content: `You are a professional Git commit generator. 
+                    Analyze the provided file list and diff to generate a concise, descriptive commit message.
+                    
+                    Rules:
+                    1. Use specific verbs (e.g., "implement", "add", "refactor", "fix", "update", "remove", "configure").
+                    2. Avoid generic descriptions like "enhance functionality" or "update code" or "make changes".
+                    3. Be specific about WHAT changed (e.g., "add Gemini provider" instead of "enhance providers").
+                    4. Return ONLY the message string. No quotes, no prefix like "Commit:".`
                 },
                 {
                     role: 'user',
