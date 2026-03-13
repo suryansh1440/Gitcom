@@ -15,7 +15,7 @@
 
 ### 🥳 Updates
 - **2026/03/13**: **v1.0.0 Released!** Full support for OpenAI, Gemini, and Ollama.
-- **2026/03/13**: **Global Distribution**: Ready to install via `npm install -g gitcom`.
+- **2026/03/13**: **Global Distribution**: Ready to install via `npm install -g gitcom-cli`.
 - **2026/03/13**: **Auto-Commit Mode**: Added `-y, --yes` flag for instant AI commits.
 - **2026/03/13**: **Token Optimization**: Hybrid diff analysis reduces LLM costs by up to 90%.
 
@@ -52,9 +52,9 @@ Welcome to **GitCom**, a high-performance CLI tool designed to automate the most
 ### Installation
 Install globally using npm:
 ```bash
-npm install -g gitcom
+npm install -g gitcom-cli
 ```
-*Note: You can also run it without installing via `npx gitcom`.*
+*Note: You can also run it without installing via `npx gitcom-cli`.*
 
 ### API Configuration
 Run the setup wizard to configure your preferred provider:
