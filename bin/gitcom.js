@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import init from '../commands/init.js';
 import commit from '../commands/commit.js';
 import configCmd from '../commands/config.js';
+import quick from '../commands/quick.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -39,6 +40,11 @@ program
     .command('config')
     .description('View and update GitCom configuration')
     .action(configCmd);
+
+program
+    .command('quick')
+    .description('Staged everything, commit with AI message and push')
+    .action(quick);
 
 // Default command action
 program.action((options) => {

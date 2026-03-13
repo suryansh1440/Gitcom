@@ -81,10 +81,12 @@ Skip the confirmation and commit instantly:
 gitcom commit -y
 ```
 
-*Or simply run the default command:*
+### Quick Workflow (Add + Commit + Push)
+Automate the entire flow with one command:
 ```bash
-gitcom
+gitcom quick
 ```
+*This stages everything, generates a message, and lets you pick a branch to push to.*
 
 ### Manage Configuration
 Update your provider or model anytime:
