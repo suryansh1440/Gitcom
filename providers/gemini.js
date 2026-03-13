@@ -27,7 +27,8 @@ class GeminiProvider {
         1. Use specific verbs (e.g., "implement", "add", "refactor", "fix", "update", "remove", "configure").
         2. Avoid generic descriptions like "enhance functionality" or "update code" or "make changes".
         3. Be specific about WHAT changed (e.g., "add Gemini provider" instead of "enhance providers").
-        4. Return ONLY the message string. No quotes, no prefix.
+        4. Keep the message COMPACT (under 70 characters) and on a SINGLE LINE.
+        5. Return ONLY the message string. No quotes, no prefix.
 
         Context:
         ${promptContent}`;

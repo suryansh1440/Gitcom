@@ -14,27 +14,31 @@
 ---
 
 ### 🥳 Updates
-- **2026/03/13**: **v1.0.0 Released!** Support for OpenAI, Gemini, and Ollama.
-- **2026/03/13**: Implemented **Hybrid Token Optimization** to reduce LLM costs by up to 90%.
-- **2026/03/13**: Added support for **ES Modules** and modern JavaScript syntax.
+- **2026/03/13**: **v1.0.0 Released!** Full support for OpenAI, Gemini, and Ollama.
+- **2026/03/13**: **Compact Messages**: Optimized for single-line, descriptive commit history (<70 chars).
+- **2026/03/13**: **Integrated Flow**: Completely refactored `init` and `settings` for seamless setup.
+- **2026/03/13**: **Token Optimization**: Hybrid diff analysis reduces LLM costs by up to 90%.
 
 ---
 
 ## 💡 Introduction
-Welcome to **GitCom**, a high-performance CLI tool designed to automate the most tedious part of your development cycle: writing commit messages. GitCom analyzes your staged changes and generates professional, conventional commit messages using state-of-the-art AI.
+Welcome to **GitCom**, a high-performance CLI tool designed to automate the most tedious part of your development cycle: writing commit messages. GitCom analyzes your staged changes and generates clean, verb-based commit messages instantly.
 
 ### Why GitCom?
+- **Descriptive & Direct**: Generates meaningful messages starting with strong verbs (e.g., "add", "fix", "refactor").
 - **Cost Efficient**: Intelligent diff summarization ensures you only send what's necessary.
 - **Provider Agnostic**: Use OpenAI, Google Gemini, or run locally with Ollama.
-- **Developer First**: Built with Node.js, ESM, and a focus on speed.
+- **Minimalist UI**: Clean terminal interface with no verbose instructions or noise.
+- 🚀 **Interactive UI**: Edit and confirm messages before they hit your history.
+- ⚙️ **Quick Config**: Easily switch providers and models via `gitcom config`.
 
 ---
 
 ## 🎯 Features
 - ⚡ **Hybrid Strategy**: Uses `git diff --stat` for large changes to minimize token usage.
-- 🛠️ **Multi-Provider**: Seamless switching between cloud and local AI models.
-- 🧹 **Noise Filtering**: Automatically ignores lockfiles and build artifacts.
-- 🚀 **Interactive UI**: Edit and confirm messages before they hit your history.
+- 📐 **Compact Output**: All messages are single-line and optimized for git history readability.
+- 🛠️ **Integrated Setup**: One-stop wizard for Provider, API Key, and Model selection.
+- 🧹 **Noise Filtering**: Automatically ignores lockfiles, build artifacts, and binaries.
 
 ---
 
@@ -57,9 +61,8 @@ Run the setup wizard to configure your preferred provider:
 ```bash
 gitcom init
 ```
-*   **Gemini**: Enter your Google AI Studio key.
-*   **OpenAI**: Enter your OpenAI API key.
-*   **Ollama**: Ensure Ollama is running at `http://localhost:11434`.
+*   **Integrated Flow**: Choose your provider, enter your key (secure entry), and pick a model from the list.
+*   **Key Security**: API keys are entered securely (hidden on-screen) and stored locally.
 
 ---
 
@@ -76,21 +79,24 @@ gitcom commit
 gitcom
 ```
 
-### Manage Settings
+### Manage Configuration
 Update your provider or model anytime:
 ```bash
-gitcom settings
+gitcom config
+```
+
+### Help & Commands
+Check all available options:
+```bash
+gitcom --help
+# or
+gitcom -h
 ```
 
 ### Reset Configuration
 Wipe all data and keys:
 ```bash
 gitcom --reset
-```
-
-### Check Version
-```bash
-gitcom -v
 ```
 
 ---
@@ -108,7 +114,7 @@ GitCom uses a **3-Stage Pipeline** to keep your bills low:
 
 ## 🤝 Acknowledgements
 - **Commander.js**: The backbone of our CLI.
-- **Inquirer**: For the beautiful interactive prompts.
+- **@inquirer/prompts**: For the robust and secure interactive interface.
 - **Ora**: For the smooth loading animations.
 
 ---

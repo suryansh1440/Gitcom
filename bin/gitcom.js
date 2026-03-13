@@ -3,7 +3,7 @@
 import { Command } from 'commander';
 import init from '../commands/init.js';
 import commit from '../commands/commit.js';
-import settings from '../commands/settings.js';
+import configCmd from '../commands/config.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -21,6 +21,7 @@ program
     .name('gitcom')
     .description('AI-powered Git commit message generator')
     .version(packageJson.version, '-v, --version')
+    .helpOption('-h, --help', 'Display help for command')
     .option('-r, --reset', 'Reset all configuration and keys');
 
 program
@@ -34,9 +35,9 @@ program
     .action(commit);
 
 program
-    .command('settings')
-    .description('View and update GitCom settings')
-    .action(settings);
+    .command('config')
+    .description('View and update GitCom configuration')
+    .action(configCmd);
 
 // Default command action
 program.action((options) => {

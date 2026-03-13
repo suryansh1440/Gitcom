@@ -28,6 +28,7 @@ async function commit() {
 
             const isConfirmed = await confirm({
                 message: 'Use this commit message?',
+                instructions: false,
                 default: true
             });
 
